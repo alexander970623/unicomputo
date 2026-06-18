@@ -1,4 +1,21 @@
-FROM richarvey/nginx-php-fpm:3.1.6
+FROM php:8.3-cli
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    unzip \
+    zip \
+    libzip-dev \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    sqlite3 \
+    libsqlite3-dev \
+    && docker-php-ext-install pdo pdo_sqlite mbstring zip
+
+# Instalar Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
@@ -10,9 +27,6 @@ RUN cp .env.example .env || true
 
 RUN php artisan key:generate --force || true
 
-RUN php artisan config:cache || true
+EXPOSE 10000
 
-RUN chown -R nginx:nginx /var/www/html/storage
-RUN chown -R nginx:nginx /var/www/html/bootstrap/cache
-
-EXPOSE 8080
+CMD php artisan serve --host=0.0.0.0 --port=10000
