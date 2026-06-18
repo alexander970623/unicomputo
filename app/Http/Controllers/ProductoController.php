@@ -20,11 +20,19 @@ class ProductoController extends Controller
     }
 
     public function store(Request $request)
-    {
-        Producto::create($request->all());
+{
+    $request->validate([
+        'codigo' => 'required',
+        'nombre' => 'required',
+        'precio' => 'required',
+        'cantidad' => 'required',
+        'categoria' => 'required'
+    ]);
 
-        return redirect()->route('productos.index');
-    }
+    Producto::create($request->all());
+
+    return redirect()->route('productos.index');
+}
 
     public function edit($id)
     {
@@ -33,14 +41,22 @@ class ProductoController extends Controller
         return view('productos.edit',compact('producto'));
     }
 
-    public function update(Request $request,$id)
-    {
-        $producto = Producto::findOrFail($id);
+    public function update(Request $request, $id)
+{
+    $request->validate([
+        'codigo' => 'required',
+        'nombre' => 'required',
+        'precio' => 'required',
+        'cantidad' => 'required',
+        'categoria' => 'required'
+    ]);
 
-        $producto->update($request->all());
+    $producto = Producto::findOrFail($id);
 
-        return redirect()->route('productos.index');
-    }
+    $producto->update($request->all());
+
+    return redirect()->route('productos.index');
+}
 
     public function destroy($id)
     {
