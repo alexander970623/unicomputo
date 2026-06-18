@@ -29,6 +29,7 @@ RUN composer install --no-dev --optimize-autoloader
 RUN cp .env.example .env || true
 
 RUN php artisan key:generate --force || true
+RUN php artisan migrate --force || true
 RUN php artisan config:clear || true
 RUN php artisan cache:clear || true
 RUN php artisan optimize:clear || true
