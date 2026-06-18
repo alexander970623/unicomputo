@@ -8,8 +8,11 @@ RUN composer install --no-dev --optimize-autoloader
 
 RUN cp .env.example .env || true
 
-RUN php artisan key:generate || true
+RUN php artisan key:generate --force || true
 
-RUN chown -R nginx:nginx /var/www/html
+RUN php artisan config:cache || true
+
+RUN chown -R nginx:nginx /var/www/html/storage
+RUN chown -R nginx:nginx /var/www/html/bootstrap/cache
 
 EXPOSE 8080
